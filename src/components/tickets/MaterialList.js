@@ -1,14 +1,29 @@
 import { useEffect, useState } from "react";
-import { Table } from "reactstrap";
+import { Table, Button } from "reactstrap";
 import { getMaterials } from "../../data/materialsData";
 import { Link } from "react-router-dom";
+import { UpdateCirculation } from "../../data/materialsData";
 
 export default function MaterialList() {
   const [materials, setMaterials] = useState([]);
 
   useEffect(() => {
-    getMaterials().then(setMaterials);
+    getMaterials().then((data) => {
+      setMaterials(data)
+    });
   }, []);
+
+  const fetchMaterials = () => {
+    getMaterials().then((data) => {
+      setMaterials(data);
+    });
+  };
+
+  const handleCirculationChange = (id) => {
+    UpdateCirculation(id).then(() => {
+      fetchMaterials()
+    })
+  }
 
   return (
     <div className="container">
@@ -35,6 +50,11 @@ export default function MaterialList() {
               <td>{m.genre.name}</td>
               <td>
                 <Link to={`${m.id}`}>Details</Link>
+              </td>
+              <td>
+                <Button color="primary" onClick={() => handleCirculationChange(m.id)}>
+                  Remove
+                </Button>
               </td>
             </tr>
           ))}

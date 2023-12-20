@@ -16,3 +16,20 @@ export const createMaterial = (material) => {
     body: JSON.stringify(material),
   }).then((res) => res.json());
 };
+
+// Update the client-side function to handle the asynchronous operation properly
+export const UpdateCirculation = (id) => {
+  return fetch(`/api/materials/${id}/soft-delete`, {
+    method: 'PUT'
+  });
+};
+
+export const ReturnMaterial = (id) => {
+  return fetch(`api/materials/return/${id}`, {
+    method: "PUT"
+  })
+}
+
+export const getNotCheckedOut = () => {
+  return fetch(`${_apiUrl}/available`).then((r) => r.json())
+}

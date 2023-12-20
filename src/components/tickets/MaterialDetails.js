@@ -8,7 +8,7 @@ export default function MaterialDetails() {
 
   const [material, setMaterial] = useState(null);
 
-  //add useEffect here to get the ticket details from the API
+  
   useEffect(() => {
     getMaterial(id).then(setMaterial);
   }, []);
