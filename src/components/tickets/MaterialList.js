@@ -1,36 +1,84 @@
 import { useEffect, useState } from "react";
-import { Table, Button } from "reactstrap";
+import { Table, Button, Input, FormGroup, Label } from "reactstrap";
 import { getMaterials } from "../../data/materialsData";
 import { Link } from "react-router-dom";
 import { UpdateCirculation } from "../../data/materialsData";
+import { getGenres } from "../../data/genresData";
+import { getMaterialTypes } from "../../data/materialTypesData";
+
 
 export default function MaterialList() {
   const [materials, setMaterials] = useState([]);
+  const [genreId, setGenreId] = useState('');
+  const [materialTypeId, setMaterialTypeId] = useState('');
+  const [genres, setGenres] = useState([]);
+  const [materialTypes, setMaterialTypes] = useState([]);
 
   useEffect(() => {
-    getMaterials().then((data) => {
-      setMaterials(data)
-    });
-  }, []);
+    fetchMaterials();
+  }, [genreId, materialTypeId]);
 
   const fetchMaterials = () => {
-    getMaterials().then((data) => {
+    getMaterials(genreId, materialTypeId).then((data) => {
       setMaterials(data);
     });
   };
 
+  useEffect(() => {
+    getGenres().then((data) => {
+      setGenres(data);
+    });
+    getMaterialTypes().then((data) => {
+      setMaterialTypes(data);
+    });
+  }, []);
+
+  
+
+
+
   const handleCirculationChange = (id) => {
     UpdateCirculation(id).then(() => {
-      fetchMaterials()
-    })
-  }
+      fetchMaterials();
+    });
+  };
+
+  const handleGenreChange = (e) => {
+    setGenreId(e.target.value);
+  };
+
+  const handleMaterialTypeChange = (e) => {
+    setMaterialTypeId(e.target.value);
+  };
 
   return (
     <div className="container">
       <div className="sub-menu bg-light">
-        <h4>Materials</h4>
+
         <Link to="/materials/create">Add</Link>
       </div>
+      <FormGroup>
+        <Label for="genreSelect"></Label>
+        <Input type="select" name="genre" id="genreSelect" onChange={handleGenreChange}>
+          <option value="">Select Genre</option>
+          {genres.map((genre) => (
+            <option key={genre.id} value={genre.id}>
+              {genre.name}
+            </option>
+          ))}
+        </Input>
+      </FormGroup>
+      <FormGroup>
+        <Label for="materialTypeSelect"></Label>
+        <Input type="select" name="materialType" id="materialTypeSelect" onChange={handleMaterialTypeChange}>
+          <option value="">Select Material Type</option>
+          {materialTypes.map((type) => (
+            <option key={type.id} value={type.id}>
+              {type.name}
+            </option>
+          ))}
+        </Input>
+      </FormGroup>
       <Table>
         <thead>
           <tr>
